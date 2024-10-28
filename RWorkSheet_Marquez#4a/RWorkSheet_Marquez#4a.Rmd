@@ -76,7 +76,7 @@ print(new_order_data)
 ```
 
 ```{r}
-#5a
+#5a.
 setwd("/cloud/project/RWorkSheet_Marquez#4a")
 Strats <- read.table("import_march.csv", header= TRUE, sep = ",")
 Strats
@@ -85,4 +85,82 @@ Strats
 ```{r}
 #5b: The 1,2,3 resulted in NA because those values are missing and did not matched the specified levels
 Strats
+```
+#6a.
+```{r}
+Num <- readline(prompt="Enter number: ")
+
+if(Num <= 50){
+  Num
+  if (Num == 20){
+  print("TRUE")
+  }else{
+    Num
+  }
+}else{
+  print("The number selected is beyond the range of 1 to 50")
+}
+```
+#7.
+```{r}
+snackPrice<-readline(prompt = "Enter Amount: ")
+if (snackPrice == 50){
+  print("The minimum bill is : 100")
+}else if(snackPrice == 100){
+  print("The minimum bill is : 100")
+}else if(snackPrice == 200){
+  print("The minimum bill is : 200")
+}else if(snackPrice == 500){
+  print("The minimum bill is : 500")
+}else if(snackPrice == 1000){
+  print("The minimum bill is : 1000")
+}else{
+  print("The number is not divisible by 50")
+}
+```
+#8a.
+```{r}
+Name<- c("Annie", "Thea", "Steve", "Anna")
+Grade1<- c(85, 65, 75, 95)
+Grade2 <- c(65, 75, 55, 75)
+Grade3<-c(85, 90, 80, 100)
+Grade4<- c (100, 90, 85, 90)
+
+Students <- data.frame(Name, Grade1, Grade2, Grade3, Grade4)
+Students
+```
+#8b.
+```{r}
+for (i in 1:nrow(Students)) {
+  avg_score <- (Students[i, "Grade1"] + Students[i, "Grade2"] + Students[i, "Grade3"] + Students[i, "Grade4"] / 4)
+  
+  if (avg_score > 90) {
+    cat(sprintf("%s's average grade this semester is %.2f. ", Students[i, "Name"], avg_score))
+  }
+}
+
+```
+
+#8c.
+```{r}
+test_averages <- colMeans(Students[2:5])
+
+for (j in 1:length(test_averages)) {
+  if (test_averages[j] < 80) {
+    cat(sprintf("The %dnd test was difficult.\n", j))
+  }
+}
+```
+```{r}
+for (i in 1:nrow(Students)) {
+  highest_score <- Students[i, 2:5][1]
+  for (j in 2:4) {
+    if (Students[i, j + 1] > highest_score) {
+      highest_score <- Students[i, j + 1]
+    }
+  }
+  if (highest_score > 90) {
+    cat(sprintf("%s’s highest grade this semester is %d.\n", Students$Name[i], highest_score))
+  }
+}
 ```
