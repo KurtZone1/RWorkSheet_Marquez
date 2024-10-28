@@ -1,0 +1,148 @@
+---
+title: "RWorksheet_Marquez#4b"
+author: "Kurt Sayro D. Marquez"
+date: "2024-10-28"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#1.
+```{r}
+
+vectorA <- c(1, 2, 3, 4, 5)
+
+for (i in vectorA) {
+  print(vectorA)
+}
+
+abs(vectorA)
+
+```
+
+#2.
+```{r}
+rows <- 5
+
+for (i in 1:rows) {
+  print(strrep("*", i))
+}
+```
+
+#3.
+```{r}
+fibonacci_sequence <- function(start){
+x <- 0
+y <- 1
+
+repeat {
+  fib <- x+y
+  x <- y
+  y <- fib
+  if (fib >= 500) {
+      break
+    }
+  if (fib >= start) {
+      print(fib)
+    }
+  }
+}
+sequencing <- as.numeric(readline(prompt="Enter a Number:"))
+
+if (!is.na(sequencing)<1) {
+  print("Please enter a higher number")
+} else {
+  cat("Fibonacci sequence starting from", sequencing, "up to 500:\n")
+  fibonacci_sequence(sequencing)
+}
+```
+#4a.
+```{r}
+data <- read.csv("/cloud/project/RWorkSheet_Marquez#4a/shoe_size_data.csv")
+head(data)
+```
+#4b.
+```{r}
+
+female_data <- subset(data, Gender == "F")
+male_data <- subset(data, Gender == "M")
+
+
+num_females <- nrow(female_data)
+num_males <- nrow(male_data)
+
+cat("Number of Females:", num_females, "\n")
+cat("Number of Males:", num_males, "\n")
+
+```
+#4c.
+```{r}
+counts <- c(num_females, num_males)
+names(counts) <- c("Female", "Male")
+
+barplot(counts, 
+        main = "Number of Males and Females",
+        col = c("pink", "lightblue"),
+        ylim = c(0, max(counts) + 5),  # Adjust y-axis limit
+        ylab = "Count",
+        xlab = "Gender")
+
+legend("topright", legend = names(counts), fill = c("pink", "lightblue"))
+
+```
+#5a.
+```{r}
+expenses <- c(Food = 60, Electricity = 10, Savings = 5, Miscellaneous = 25)
+percentages <- round(expenses / sum(expenses) * 100, 1)
+labels <- paste(names(expenses), percentages, "%", sep = " ")
+colors <- c("lightblue", "lightgreen", "lightcoral", "lightyellow")
+
+pie(expenses, labels = labels, col = colors, main = "Dela Cruz Family Monthly Expenses")
+```
+#6a.
+```{r}
+data(iris)
+str(iris)
+```
+#6b.
+```{r}
+mean_values <- c(mean(iris$Sepal.Length), mean(iris$Sepal.Width), 
+                 mean(iris$Petal.Length), mean(iris$Petal.Width))
+mean_values
+```
+#6c.
+```{r}
+pie(table(iris$Species), 
+    main="Distribution of Species in Iris Dataset",
+    col=c("lightblue", "lightgreen", "lightcoral"),
+    labels=paste(round(table(iris$Species)/nrow(iris)*100, 1), "%"))
+```
+#6d.
+```{r}
+setosa <- iris[iris$Species == "setosa",]
+versicolor <- iris[iris$Species == "versicolor",]
+virginica <- iris[iris$Species == "virginica",]
+
+tail(setosa, 6)
+tail(versicolor, 6)
+tail(virginica, 6)
+```
+#6e.
+```{r}
+plot(iris$Sepal.Length, iris$Sepal.Width, 
+     main="Iris Dataset", 
+     sub="Sepal Width and Length", 
+     xlab="Sepal Length (cm)", 
+     ylab="Sepal Width (cm)", 
+     pch=as.numeric(iris$Species), 
+     col=as.numeric(iris$Species))
+legend("topright", legend=levels(iris$Species), 
+       col=1:3, pch=1:3)
+```
+#6f.
+```{r}
+#The scatter plot visually represents the relationship between sepal length and sepal width for the three different species.
+```
+#7a.
