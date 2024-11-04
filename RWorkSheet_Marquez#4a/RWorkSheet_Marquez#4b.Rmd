@@ -146,3 +146,69 @@ legend("topright", legend=levels(iris$Species),
 #The scatter plot visually represents the relationship between sepal length and sepal width for the three different species.
 ```
 #7a.
+```{r}
+alexa <- readxl::read_xlsx("/cloud/project/RWorkSheet_Marquez#4a/alexa_file.xlsx", sheet = 1)
+alexa
+
+unique(alexa$variation)
+alexa$variation <- gsub("Black  Dot", "Black Dot", alexa$variation)
+alexa$variation <- gsub("Black  Plus", "Black Plus", alexa$variation)
+alexa$variation <- gsub("Black  Show", "Black Show", alexa$variation)
+alexa$variation <- gsub("Black  Spot", "Black Spot", alexa$variation)
+
+alexa$variation <- gsub("White  Dot", "White Dot", alexa$variation)
+alexa$variation <- gsub("White  Plus", "White Plus", alexa$variation)
+alexa$variation <- gsub("White  Show", "White Show", alexa$variation)
+alexa$variation <- gsub("White  Spot", "White Spot", alexa$variation)
+unique(alexa$variation)
+
+head(alexa)
+
+```
+
+#7b.
+```{r}
+library(dplyr)
+
+variation_counts <- alexa %>% 
+  count(variation)
+
+print(variation_counts)
+
+save(variation_counts, file = "variations.RData")
+```
+#7c.
+```{r}
+load("variations.RData")
+
+barplot(variation_counts$n,
+        names.arg = variation_counts$variation,
+        main = "Alexa Variations",
+        xlab = "Variation",
+        ylab = "Count",
+        col = rainbow(nrow(variation_counts)))
+```
+#7d.
+```{r}
+black_variants <- variation_counts[grepl("Black", variation_counts$variation), ]
+white_variants <- variation_counts[grepl("White", variation_counts$variation), ]
+
+par(mfrow = c(1, 2))
+
+barplot(black_variants$n,
+        names.arg = black_variants$variation,
+        main = "Black Variants",
+        xlab = "Variation",
+        ylab = "Count",
+        col = rainbow(nrow(black_variants))
+)
+
+barplot(white_variants$n,
+        names.arg = white_variants$variation,
+        main = "White Variants",
+        xlab = "Variation",
+        ylab = "Count",
+        col = rainbow(nrow(white_variants))
+)
+```
+
