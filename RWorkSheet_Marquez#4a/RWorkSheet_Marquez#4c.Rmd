@@ -1,0 +1,218 @@
+---
+title: "RWorksheet_Marquez#4c"
+author: "Kurt Sayro D. Marquez"
+date: "2024-11-05"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+#1a.
+```{r}
+mpg <- read.csv("/cloud/project/RWorkSheet_Marquez#4a/mpg.csv")
+```
+#1b.
+#The categorical variables are manufacturers, model, trans, drv, fl, and class
+
+#1c.
+#The continuous variables are displ, year, cyl, cty, and hwy
+
+#2a. 
+```{r}
+library(dplyr)
+
+manufacturers <- mpg %>%
+  group_by(manufacturer) %>%
+  summarise(unique_models = n_distinct(model)) %>%
+  arrange(desc(unique_models))
+print(manufacturers)
+
+models <- mpg %>%
+  group_by(model) %>%
+  summarise(variations = n()) %>%
+  arrange(desc(variations))
+
+
+print(models)
+```
+#2b.
+```{r}
+barplot(
+  manufacturers$unique_models,
+  names.arg = manufacturers$manufacturer,
+  las = 2,
+  col = "purple",
+  main = "Number of Unique Models by Manufacturer",
+  ylab = "Number of Models"
+)
+library(ggplot2)
+
+
+ggplot(manufacturers, aes(x = reorder(manufacturer, -unique_models), y = unique_models)) +
+  geom_bar(stat = "identity", fill = "red") +
+  labs(title = "Number of Unique Models by Manufacturer", x = "Manufacturer", y = "Number of Models") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+#2a.
+```{r}
+ggplot(mpg, aes(model, manufacturer)) + geom_point()
+```
+#b.
+#For me it is not useful because it lacks context and the text in x-axis is not readable. To make it more readable, I will use barplot to show the count of models for each manufacturer.
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+top20 <- mpg %>%
+  arrange(desc(year)) %>%
+  head(20)
+
+ggplot(top20, aes(x= model, y= year,)) + geom_point() + labs(title = "Top Car Models", xlab="Car model", ylab="Year") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+#4a.
+```{r}
+library(dplyr)
+library(ggplot2)
+
+car_counts <- mpg %>%
+  group_by(model) %>%
+  summarise(number_of_cars = n()) %>%
+  arrange(desc(number_of_cars))
+
+
+
+top_20_models <- head(car_counts, 20)
+
+
+ggplot(top_20_models, aes(x = reorder(model, number_of_cars), y = number_of_cars)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  labs(title = "Top 20 Car Models by Number of Cars",
+       x = "Car Model",
+       y = "Number of Cars") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+#4b.
+```{r}
+ggplot(top_20_models, aes(x = reorder(model, number_of_cars), y = number_of_cars)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "Top 20 Car Models by Number of Cars",
+       x = "Car Model",
+       y = "Number of Cars") +
+  coord_flip() 
+```
+#5a.Vehicles designed with more cylinders are likely to have larger engine capacities
+```{r}
+ggplot(mpg, aes(x = cyl, y = displ, color = displ)) +
+  geom_point() +  
+  labs(title = "Relationship between No. of Cylinders and Engine Displacement",
+       x = "Number of Cylinders",
+       y = "Engine Displacement (litres)") 
+```
+#6.The result displays the relationship between engine displacement and highway miles per gallon, with points colored based on city mpg 
+```{r}
+library(ggplot2)
+
+
+ggplot(mpg, aes(x = displ, y = hwy, color = cty)) +
+  geom_point() +  
+  labs(title = "Relationship between Engine Displacement and Highway MPG",
+       x = "Engine Displacement (litres)",
+       y = "Highway Miles Per Gallon")
+```
+#6a.
+```{r}
+traffic <- read.csv("/cloud/project/RWorkSheet_Marquez#4a/traffic.csv")
+obs <- nrow(traffic)
+vrbls <- names(traffic)
+obs
+vrbls
+```
+#6b.
+```{r}
+
+junctions_data <- split(traffic, traffic$Junction)
+
+
+traffic$DateTime <- as.POSIXct(traffic$DateTime, format="%Y-%m-%d %H:%M:%S")
+
+ggplot(traffic, aes(x = DateTime, y = Vehicles, color = factor(Junction))) +
+  geom_line() +
+  labs(title = "Traffic Volume Over Time by Junction",
+       x = "Date and Time",
+       y = "Number of Vehicles",
+       color = "Junction") +
+  theme_minimal() +
+  facet_wrap(~ Junction, scales = "free_y")
+  
+```
+#7a.
+```{r}
+library(openxlsx)
+library(readxl)
+
+alexa <- read.xlsx("/cloud/project/RWorkSheet_Marquez#4a/alexa_file.xlsx")
+observation <- nrow(alexa)
+columns <- ncol(alexa)
+observation
+columns
+```
+#7b.
+```{r}
+variation_counts <- alexa %>%
+  group_by(variation) %>%
+  summarise(total = n())
+variation_counts
+```
+#7c. There are only 3 variations that has more counts and 2 lowest counts than the others.
+```{r}
+ggplot(variation_counts, aes(x = variation, y = total, fill = variation)) +
+  geom_bar(stat = "identity") +  
+  labs(title = "Total Counts of Variations",
+       x = "Variation",
+       y = "Total Count") + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+#7d.
+```{r}
+library(dplyr)
+library(ggplot2)
+
+alexa$date <- as.Date(alexa$date)
+
+daily_reviews <- alexa %>%
+  group_by(date) %>%
+  summarise(total_verified_reviews = sum(feedback))
+
+ggplot(daily_reviews, aes(x = date, y = total_verified_reviews)) +
+  geom_line(color = "green") +
+  labs(title = "Number of Verified Reviews Over Time",
+       x = "Date",
+       y = "Total Verified Reviews") 
+```
+#7e.
+```{r}
+library(dplyr)
+library(ggplot2)
+
+variation_ratings <- alexa %>%
+  group_by(variation) %>%
+  summarise(average_rating = mean(rating, na.rm = TRUE)) %>%
+
+arrange(desc(average_rating))
+
+variation_ratings
+
+```
+```{r}
+ggplot(variation_ratings, aes(x = reorder(variation, -average_rating), y = average_rating, fill = variation)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Average Rating by Product Variation",
+       x = "Product Variation",
+       y = "Average Rating") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  guides(fill = "none")
+```
